@@ -39,7 +39,7 @@ dsci551-flight-search/
 
 ---
 
-## Step 1 — Clone the Repository
+## Step 1 - Clone the Repository
 
 ```bash
 git clone https://github.com/Rylannat/DSCI_551_FINAL_PROJECT.git
@@ -48,7 +48,7 @@ cd DSCI_551_FINAL_PROJECT
 
 ---
 
-## Step 2 — Install Python Dependencies
+## Step 2 - Install Python Dependencies
 
 ```bash
 pip install streamlit psycopg2-binary pandas
@@ -56,7 +56,7 @@ pip install streamlit psycopg2-binary pandas
 
 ---
 
-## Step 3 — Dataset
+## Step 3 - Dataset
 
 The full dataset has been downloaded from the **Bureau of Transportation Statistics (BTS)** - Reporting Carrier On-Time Performance (1987–present) - covering years **2023–2025**. All raw CSV files are already uploaded and available in `/data/original/`.
 
@@ -64,7 +64,7 @@ To verify the source or download additional months: https://www.transtats.bts.go
 
 ---
 
-## Step 4 — Run the Data Cleaning Script
+## Step 4 - Run the Data Cleaning Script
 
 ```bash
 cd data
@@ -150,8 +150,8 @@ DB_CONFIG = {
 
 1. In pgAdmin: expand `DSCI551` -> `Databases` → `flightmgmtsys`
 2. Right-click `flightmgmtsys` -> **Query Tool**
-3. Open `sql/Final_dsci_551_project_code.sql`
-4. Run **only the first block** - the `CREATE TABLE flights (...)` statement
+3. In the Query Tool toolbar, click the open folder icon (Open File) and navigate to the cloned repository folder. Select sql/Final_dsci_551_project_code.sql to load it into the Query Tool editor.
+4. Once the file is loaded, run only the first block - the CREATE TABLE flights (...) statement at the top. Highlight just that block and press F5 or click the Execute/Run button.
 5. The table appears under `Schemas -> public -> Tables`
 
 ---
