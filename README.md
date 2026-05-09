@@ -61,6 +61,9 @@ The full dataset has been downloaded from the **Bureau of Transportation Statist
 
 To verify the source or download additional months: https://www.transtats.bts.gov/DL_SelectFields.aspx?gnoyr_VQ=FGJ&QO_fu146_anzr=b0-gvzr
 
+The columns to be selected are:
+Year, Month, DayofMonth, DayOfWeek, FlightDate, Reporting_Airline, Flight_Number_Reporting_Airline, OriginAirportID, Origin, OriginStateName, DestAirportID, Dest, DestStateName, CRSDepTime,DepTime, DepDelay, CRSArrTime, ArrTime, ArrDelay, Cancelled, CRSElapsedTime, ActualElapsedTime, AirTime, Distance, CarrierDelay, WeatherDelay, NASDelay, LateAircraftDelay
+
 ---
 
 ## Step 4 - Run the Data Cleaning Script
