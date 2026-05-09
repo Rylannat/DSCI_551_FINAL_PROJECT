@@ -116,29 +116,31 @@ def run_explain(filters):
 
 
 def parse_explain_highlights(plan_text):
-    """Extract key metrics from EXPLAIN ANALYZE output for the summary card."""
-    highlights = {}
+    highlights = {
+        "scan_type": None,
+        "execution_time": "—",
+        "planning_time": "—",
+        "heap_fetches": "N/A",
+    }
     for line in plan_text.splitlines():
-        line_stripped = line.strip()
-
-        # Scan type — first line tells us the top-level node
-        if "scan type" not in highlights:
-            if "Index Only Scan" in line_stripped:
+        s = line.strip()
+        if highlights["scan_type"] is None:
+            if "Index Only Scan" in s:
                 highlights["scan_type"] = "Index Only Scan"
-            elif "Index Scan" in line_stripped:
+            elif "Index Scan" in s:
                 highlights["scan_type"] = "Index Scan"
-            elif "Seq Scan" in line_stripped or "Sequential Scan" in line_stripped:
-                highlights["scan_type"] = "Sequential Scan"
-            elif "Bitmap Heap Scan" in line_stripped:
+            elif "Bitmap Heap Scan" in s:
                 highlights["scan_type"] = "Bitmap Heap Scan"
-
-        if "Execution Time:" in line_stripped:
-            highlights["execution_time"] = line_stripped.split("Execution Time:")[-1].strip()
-        if "Planning Time:" in line_stripped:
-            highlights["planning_time"] = line_stripped.split("Planning Time:")[-1].strip()
-        if "Heap Fetches:" in line_stripped:
-            highlights["heap_fetches"] = line_stripped.split("Heap Fetches:")[-1].strip()
-
+            elif "Seq Scan" in s:
+                highlights["scan_type"] = "Sequential Scan"
+        if "Execution Time:" in s:
+            highlights["execution_time"] = s.split("Execution Time:")[-1].strip()
+        if "Planning Time:" in s:
+            highlights["planning_time"] = s.split("Planning Time:")[-1].strip()
+        if "Heap Fetches:" in s:
+            highlights["heap_fetches"] = s.split("Heap Fetches:")[-1].strip()
+    if highlights["scan_type"] is None:
+        highlights["scan_type"] = "Unknown"
     return highlights
 
 
@@ -195,29 +197,24 @@ if search:
         highlights = parse_explain_highlights(plan_text)
 
         # Summary metric cards
-        scan_type = highlights.get("scan_type", "Unknown")
-        description = SCAN_COLORS.get(scan_type)
+        scan_type = highlights["scan_type"]
+        description = SCAN_COLORS.get(scan_type, "")
 
         col1, col2, col3, col4 = st.columns(4)
         with col1:
             st.metric("Scan Type", f"{scan_type}")
         with col2:
-            st.metric("Execution Time", highlights.get("execution_time", "—"))
+            st.metric("Execution Time", highlights.get("execution_time", "-"))
         with col3:
-            st.metric("Planning Time", highlights.get("planning_time", "—"))
+            st.metric("Planning Time", highlights.get("planning_time", "-"))
         with col4:
             st.metric("Heap Fetches", highlights.get("heap_fetches", "N/A"))
 
         # Scan type explanation badge
         st.markdown(
-            f"""
-            <div style="background-color:22; border-left: 4px solid;
-                        padding: 8px 14px; border-radius:4px; margin: 8px 0;">
-                <font-weight:600;"> {scan_type}
-                &nbsp;—&nbsp; {description}
-            </div>
-            """,
-            unsafe_allow_html=True,
+           f'<div style="border-left:4px solid #555; padding:8px 14px; border-radius:4px; margin:8px 0;">'
+           f'{scan_type} &mdash; {description}</div>',
+           unsafe_allow_html=True,
         )
 
         # Full raw EXPLAIN output
