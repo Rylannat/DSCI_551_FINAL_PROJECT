@@ -17,18 +17,20 @@ def build_date(row):
         return None
 
 def main():
-    folder = "."
-    csv_files = [f for f in os.listdir(folder) if f.endswith(".csv") and not f.startswith("cleaned_")]
+    folder = os.path.join(os.path.dirname(__file__), "original")
+    output_folder = os.path.join(os.path.dirname(__file__), "cleaned")
+    os.makedirs(output_folder, exist_ok=True)
+    csv_files = [f for f in os.listdir(folder) if f.endswith(".csv")]
 
     if not csv_files:
         print("No raw CSV files found to process.")
         return
 
     for input_csv in csv_files:
-        output_csv = "cleaned_" + input_csv
+        output_csv = os.path.join(output_folder, "cleaned_" + input_csv)
         print(f"Processing {input_csv}...")
 
-        df = pd.read_csv(input_csv, low_memory=False)
+        df = pd.read_csv(os.path.join(folder, input_csv), low_memory=False)
 
         # Keep only needed columns, but also keep YEAR/MONTH/DAY_OF_MONTH as fallback
         keep_cols = [
